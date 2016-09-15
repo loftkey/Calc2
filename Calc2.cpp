@@ -54,11 +54,12 @@ void Calc2::CalcMenu()
 					case 02:
 						F02distance();
 						break;
+					case 03:
+						F03slope();
+						break;
 					default:
 						tempi = -1;
 					}
-					/*if (tempi != -1)
-						std::cin.ignore(std::numeric_limits<std::streamsize>::max(), '\n');*/
 				}
 				else
 					printf("%s\n", "Error: 000 INVALID INPUT");
@@ -350,7 +351,10 @@ void Calc2::F00quadratic()
 void Calc2::F00quadratic(double a, double b, double c)
 {
 	if ((pow(b, 2) - 4 * a *  c) < 0)
+	{
 		printf("%s", "Error: 004 Imaginary number");
+		std::cout << "Solution: ( " << -b << " +- " << sqrt(-(pow(b, 2) - 4 * a *  c)) << "i )  / " << (2 * a) << std::endl;
+	}
 	else
 		std::cout << "Solution: ( " << -b << " +- " << sqrt(pow(b, 2) - 4 * a *  c) << " )  / " << (2 * a) << " : (" << (-b + sqrt(pow(b, 2) - 4 * a *  c)) / (2 * a) << ", " << (-b - sqrt(pow(b, 2) - 4 * a *  c)) / (2 * a) << ")" <<  std::endl;
 }
@@ -370,20 +374,26 @@ void Calc2::F01pythagorean()
 		case 'a' :
 			printf("%s", "Enter b: ");
 			std::cin >> x;
+			std::cin.ignore(std::numeric_limits<std::streamsize>::max(), '\n');
 			printf("%s", "Enter c: ");
 			std::cin >> y;
+			std::cin.ignore(std::numeric_limits<std::streamsize>::max(), '\n');
 			break;
 		case 'b' :
 			printf("%s", "Enter a: ");
 			std::cin >> x;
+			std::cin.ignore(std::numeric_limits<std::streamsize>::max(), '\n');
 			printf("%s", "Enter c: ");
 			std::cin >> y;
+			std::cin.ignore(std::numeric_limits<std::streamsize>::max(), '\n');
 			break;
 		case 'c' :
 			printf("%s", "Enter a: ");
 			std::cin >> x;
+			std::cin.ignore(std::numeric_limits<std::streamsize>::max(), '\n');
 			printf("%s", "Enter b: ");
 			std::cin >> y;
+			std::cin.ignore(std::numeric_limits<std::streamsize>::max(), '\n');
 			break;
 		default:
 			missing = 'E';
@@ -405,7 +415,10 @@ void Calc2::F01pythagorean(double x, double y, char missing)
 		solution = pow(y, 2) + pow(x, 2);
 	
 	if (solution < 0)
+	{
 		printf("%s", "Error: 004 Imaginary number");
+		std::cout << "Solution: " << sqrt(-solution) << "i" << std::endl;
+	}
 	else
 		std::cout <<"Solution: " <<  sqrt(solution) << std::endl;
 }
@@ -419,16 +432,47 @@ void Calc2::F02distance()
 	printf("%s\n", "[---> Please Enter:");
 	std::cout << "x1: ";
 	std::cin >> x1;
+	std::cin.ignore(std::numeric_limits<std::streamsize>::max(), '\n');
 	std::cout << "y1: ";
 	std::cin >> y1;
+	std::cin.ignore(std::numeric_limits<std::streamsize>::max(), '\n');
 	std::cout << "x2: ";
 	std::cin >> x2;
+	std::cin.ignore(std::numeric_limits<std::streamsize>::max(), '\n');
 	std::cout << "y2: ";
 	std::cin >> y2;
+	std::cin.ignore(std::numeric_limits<std::streamsize>::max(), '\n');
 	F02distance(x1, y1, x2, y2);
 }
 //F02 Distance Formula - Private
 void Calc2::F02distance(double x1, double y1, double x2, double y2)
 {
-		std::cout << "Solution: " << sqrt(pow(x2-x1,2) + pow(y2-y1,2)) << std::endl;
+	std::cout << "Solution: " << sqrt(pow(x2-x1,2) + pow(y2-y1,2)) << std::endl;
+}
+//F03 Slope Formula - Public
+void Calc2::F03slope()
+{
+	double x1, x2, y1, y2;
+	printf("%s\n", "\n[---> Slope Formula");
+	printf("%s\n", "[---> given: two points (x1, y1) and (x2, y2)");
+	printf("%s\n", "[---> solve: The slope = Rise/Run (y2 - y1)/(x2 - x1)");
+	printf("%s\n", "[---> Please Enter:");
+	std::cout << "x1: ";
+	std::cin >> x1;
+	std::cin.ignore(std::numeric_limits<std::streamsize>::max(), '\n');
+	std::cout << "y1: ";
+	std::cin >> y1;
+	std::cin.ignore(std::numeric_limits<std::streamsize>::max(), '\n');
+	std::cout << "x2: ";
+	std::cin >> x2;
+	std::cin.ignore(std::numeric_limits<std::streamsize>::max(), '\n');
+	std::cout << "y2: ";
+	std::cin >> y2;
+	std::cin.ignore(std::numeric_limits<std::streamsize>::max(), '\n');
+	F03slope(x1, y1, x2, y2);
+}
+//F03 Slope Formula - Private
+void Calc2::F03slope(double x1, double y1, double x2, double y2)
+{
+	std::cout << "Solution: " << (y2-y1) << "/" << (x2-x1) << std::endl;
 }

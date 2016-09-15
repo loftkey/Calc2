@@ -45,7 +45,7 @@ DESCRIPTION: Calc2 is a calculator with functions for equations
 					-Figure out how to implement pointers for effeciency
 
 
-		[*]	09/13/2016 | 0.1.3:
+		[*]	09/14/2016 | 0.1.3:
 				ADDITIONS:
 					-Added info to class and menu
 					-Added distance formula
@@ -55,7 +55,16 @@ DESCRIPTION: Calc2 is a calculator with functions for equations
 					-Add left/right arrow shift through answers
 					-Fix cin << and getline adding on functions
 					-Add slope, slope curve, quotient, power rule, trig identities,complete the square (Idk if that's a formula), u sub, integration by parts, factoring, commutative law and all those other basic onesSAS, ASS, ASA. Finding angle/side of triangles, basic derivativeand integration formulas.
-
+		[*]	09/15/2016 | 0.1.4:
+				ADDITIONS:
+					-Added slope formula
+					-Added ErrorList to info
+				CHANGES:
+					-Fixed cin << and getline adding on functions
+				TO-DO:
+					-Add Error handling for incorrect input on functions!! maybe add infix ->rpn->num fuunctionality
+					-Add left/right arrow shift through answers
+					-Add slope curve, quotient, power rule, trig identities,complete the square (Idk if that's a formula), u sub, integration by parts, factoring, commutative law and all those other basic onesSAS, ASS, ASA. Finding angle/side of triangles, basic derivativeand integration formulas.
 
 */
 
@@ -76,9 +85,9 @@ using std::queue;
 class Calc2
 {
 private:
-	const string	menu = "[-----------------------------------------------------]\n[------------------- Calc v0.1 Key -------------------]\n[-----------------------------------------------------]\n[---> R - Toggle Radians/Degrees \n[---> F - Formula List\n[---> L - Clear \n[---> I - Info\n[---> E - Exit \n[-----------------------------------------------------]\n[----- To use Type out problem in infix notation -----]\n[------- or in Riggy type '-calc ' followed by -------] \n[--------- an above command or infix problem ---------]\n[-----------------------------------------------------]";
-	const string	formulaList = "\n[---> F00 - Quadratic Formula\n[---> F01 - Pythagorean Theorem\n[---> F02 - Distance Formula";
-	const string	info = "\nCreated By: Ody\nFor support: beta.beam.lab@gmail.com\ninput not case-sensitive\nBuild 0.1.3b\n";
+	const string	menu = "[-----------------------------------------------------]\n[------------------- Calc v0.1 Key -------------------]\n[-----------------------------------------------------]\n[---> R - Toggle Radians/Degrees \n[---> F - Formula List\n[---> L - Clear \n[---> I - Info (please read if you have an Error)\n[---> E - Exit \n[-----------------------------------------------------]\n[----- To use Type out problem in infix notation -----]\n[------- or in Riggy type '-calc ' followed by -------] \n[--------- an above command or infix problem ---------]\n[-----------------------------------------------------]";
+	const string	formulaList = "\n[---> F00 - Quadratic Formula\n[---> F01 - Pythagorean Theorem\n[---> F02 - Distance Formula\n[---> F03 - Slope Formula";
+	const string	info = "\nCreated By: Ody\nFor support: beta.beam.lab@gmail.com\ninput not case-sensitive\nFormulas Do not support Fractions\nBuild 0.1.4b\n\nError List\nError: 000 INVALID INPUT\nError: 001 MISSIMATCHED PERENTHESES\nError: 002 nums size != 1 ------------ (this means there where left over numbers on stack or no numbers at all ie not enough opperators)\nError: 003 outQueue size != 0 -------- (This means not all items on queue made it to the stack ie too many opperators\nError: 004 Imaginary number ---------- (This means that the answer was imaginary ie square root of a negative number)";
 	bool			radians;
 	bool			valid(char c);
 	bool			isPrecedence(char, char);
@@ -89,6 +98,7 @@ private:
 	void			F00quadratic(double a, double b, double c);
 	void			F01pythagorean(double x, double y, char missing);
 	void			F02distance(double x1, double y1, double x2, double y2);
+	void			F03slope(double x1, double y1, double x2, double y2);
 //-------------------------------------------------------------------------
 
 public:
@@ -102,6 +112,7 @@ public:
 	void			F00quadratic();
 	void			F01pythagorean();
 	void			F02distance();
+	void			F03slope();
 //-------------------------------------------------------------------------
 };
 
