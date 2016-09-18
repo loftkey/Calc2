@@ -91,7 +91,7 @@ void Calc2::CalcMenu()
 // this function checks if input is valid but not a function/operator
 bool Calc2::valid(char c)
 {
-	return (isdigit(c) || c == '(' || c == ')' || c == ' ');
+	return (isdigit(c) || c == '(' || c == ')' || c == ' ' || c == '.');
 }
 // this determines order of operations precedence
 bool Calc2::isPrecedence(char a, char b)
@@ -139,6 +139,8 @@ string Calc2::isFunc(string s)
 void Calc2::solve(string input)
 {
 	string temp = "";
+	bool noDec = true, neg = false;;
+	int paren = 0;
 	queue<string> outQueue;					//output queue
 	std::stack<string> opStack;						//opperator stack
 	while (!input.empty() || !opStack.empty())		//eats input till it is empty
@@ -147,17 +149,24 @@ void Calc2::solve(string input)
 		{
 			if (valid(tolower(input[0])) || !isFunc(input).empty())
 			{
-				while (isdigit(input[0]))
+				while (isdigit(input[0]) || (input[0] == '.' && noDec))
 				{
+					noDec = (input[0] == '.') ? false : noDec;
 					temp += input[0];
 					input.erase(input.begin()); // eat
 				}
+				if (input[0] == '.')
+				{
+					printf("%s\n", "Error: 000 INVALID INPUT");
+					break;
+				}
+				noDec = true;
 				if (!temp.empty() && !isdigit(input[0]))
 				{
 					outQueue.push(temp); // push num on Queue
 					temp.clear();
 				}
-				if (input[0] == ' ')
+				while (input[0] == ' ')
 				{
 					input.erase(input.begin()); // eat
 				}
@@ -187,7 +196,17 @@ void Calc2::solve(string input)
 				if (input[0] == '(')
 				{
 					opStack.push("("); // push Stack
+					paren++;
 					input.erase(input.begin()); // eat
+					while (input[0] == ' ')
+					{
+						input.erase(input.begin()); // eat
+					}
+					if (input[0] == '-')
+					{
+						neg = true;
+						input.erase(input.begin()); // eat
+					}
 				}
 				if (input[0] == ')')
 				{
@@ -201,6 +220,13 @@ void Calc2::solve(string input)
 					if (opStack.top()[0] == '(')
 					{
 						opStack.pop(); // pop stack
+						if (neg && paren == 1)
+						{
+							outQueue.push("-1");
+							outQueue.push("*");
+							neg = false;
+						}
+						paren--;
 						input.erase(input.begin()); // eat
 					}
 					else
@@ -250,7 +276,7 @@ string Calc2::solveRPN(queue<string> outQueue)
 		temp = outQueue.front();
 		if ((valid(temp[0]) || !isFunc(temp).empty()) && temp[0] != '(' && temp[0] != '(')
 		{
-			if (isdigit(temp[0]))
+			if (isdigit(temp[0]) || temp[0] == '.' || temp == "-1")
 			{
 				nums.push(stod(temp));
 				outQueue.pop();

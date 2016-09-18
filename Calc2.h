@@ -55,6 +55,7 @@ DESCRIPTION: Calc2 is a calculator with functions for equations
 					-Add left/right arrow shift through answers
 					-Fix cin << and getline adding on functions
 					-Add slope, slope curve, quotient, power rule, trig identities,complete the square (Idk if that's a formula), u sub, integration by parts, factoring, commutative law and all those other basic onesSAS, ASS, ASA. Finding angle/side of triangles, basic derivativeand integration formulas.
+
 		[*]	09/15/2016 | 0.1.4:
 				ADDITIONS:
 					-Added slope formula
@@ -65,6 +66,21 @@ DESCRIPTION: Calc2 is a calculator with functions for equations
 					-Add Error handling for incorrect input on functions!! maybe add infix ->rpn->num fuunctionality
 					-Add left/right arrow shift through answers
 					-Add slope curve, quotient, power rule, trig identities,complete the square (Idk if that's a formula), u sub, integration by parts, factoring, commutative law and all those other basic onesSAS, ASS, ASA. Finding angle/side of triangles, basic derivativeand integration formulas.
+					-Add decimal point acception
+					-Add negative number acception
+					-Add pi and other constants
+
+		[*]	09/17/2016 | 0.1.5:
+				ADDITIONS:
+					-Added support for decimal numbers
+					-Added support for negative numbers
+				CHANGES:
+					
+				TO-DO:
+					-Add Error handling for incorrect input on functions!! maybe add infix ->rpn->num fuunctionality
+					-Add left/right arrow shift through answers
+					-Add slope curve, quotient, power rule, trig identities,complete the square (Idk if that's a formula), u sub, integration by parts, factoring, commutative law and all those other basic onesSAS, ASS, ASA. Finding angle/side of triangles, basic derivativeand integration formulas.
+					-Add support for pi and other constants
 
 */
 
@@ -87,7 +103,7 @@ class Calc2
 private:
 	const string	menu = "[-----------------------------------------------------]\n[------------------- Calc v0.1 Key -------------------]\n[-----------------------------------------------------]\n[---> R - Toggle Radians/Degrees \n[---> F - Formula List\n[---> L - Clear \n[---> I - Info (please read if you have an Error)\n[---> E - Exit \n[-----------------------------------------------------]\n[----- To use Type out problem in infix notation -----]\n[------- or in Riggy type '-calc ' followed by -------] \n[--------- an above command or infix problem ---------]\n[-----------------------------------------------------]";
 	const string	formulaList = "\n[---> F00 - Quadratic Formula\n[---> F01 - Pythagorean Theorem\n[---> F02 - Distance Formula\n[---> F03 - Slope Formula";
-	const string	info = "\nCreated By: Ody\nFor support: beta.beam.lab@gmail.com\ninput not case-sensitive\nFormulas Do not support Fractions\nBuild 0.1.4b\n\nError List\nError: 000 INVALID INPUT\nError: 001 MISSIMATCHED PERENTHESES\nError: 002 nums size != 1 ------------ (this means there where left over numbers on stack or no numbers at all ie not enough opperators)\nError: 003 outQueue size != 0 -------- (This means not all items on queue made it to the stack ie too many opperators\nError: 004 Imaginary number ---------- (This means that the answer was imaginary ie square root of a negative number)";
+	const string	info = "\nCreated By: Ody\nFor support: beta.beam.lab@gmail.com\ninput not case-sensitive\nFormulas Do not support Fractions\nDecimals supported\nTo input negative number surround it with parenthesis example: 2 * (-12) or (-(60 + 2 - sin(30)))\nBuild 0.1.5b\n\nError List\nError: 000 INVALID INPUT\nError: 001 MISSIMATCHED PERENTHESES\nError: 002 nums size != 1 ------------ (this means there where left over numbers on stack or no numbers at all ie not enough opperators)\nError: 003 outQueue size != 0 -------- (This means not all items on queue made it to the stack ie too many opperators\nError: 004 Imaginary number ---------- (This means that the answer was imaginary ie square root of a negative number)";
 	bool			radians;
 	bool			valid(char c);
 	bool			isPrecedence(char, char);
