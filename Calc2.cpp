@@ -25,7 +25,15 @@ void Calc2::CalcMenu()
 	while (!Exit)
 	{
 		std::getline(std::cin, parse);
-		if (parse == "R" || parse == "r")
+		if (parse == "P" || parse == "p")
+		{
+			printf("%s", prefixes.c_str());
+		}
+		else if (parse == "const" || parse == "Const" || parse == "CONST")
+		{
+			printf("%s", constants.c_str());
+		}
+		else if (parse == "R" || parse == "r")
 		{
 			radians = !radians;
 			temp = radians ? "\nUsing: Radians\n" : "\nUsing: Degrees\n";
@@ -52,10 +60,13 @@ void Calc2::CalcMenu()
 						F01pythagorean();
 						break;
 					case 02:
-						F02distance();
+						F02distance2D();
 						break;
 					case 03:
-						F03slope();
+						F03distance3D();
+						break;
+					case 04:
+						F04slope();
 						break;
 					default:
 						tempi = -1;
@@ -157,7 +168,7 @@ void Calc2::solve(string input)
 				}
 				if (input[0] == '.')
 				{
-					printf("%s\n", "Error: 000 INVALID INPUT");
+					printf("%s\n", "Error: 000 INVALID INPUT 0.1");
 					break;
 				}
 				noDec = true;
@@ -231,14 +242,14 @@ void Calc2::solve(string input)
 					}
 					else
 					{
-						printf("%s\n", "Error: 001 MISSIMATCHED PERENTHESES");
+						printf("%s\n", "Error: 001 MISSIMATCHED PERENTHESES 0.1");
 						break;
 					}
 				}
 			}
 			else
 			{
-				printf("%s\n", "Error: 000 INVALID INPUT");
+				printf("%s\n", "Error: 000 INVALID INPUT 0.2");
 				break;
 			}
 		}
@@ -248,7 +259,8 @@ void Calc2::solve(string input)
 			{
 				if (opStack.top()[0] == '(' || opStack.top()[0] == ')')
 				{
-					printf("%s\n", "Error: 001 MISSIMATCHED PERENTHESES");
+					printf("%s\n", "Error: 001 MISSIMATCHED PERENTHESES 0.2");
+					opStack.pop(); // temporary fix for infinite loop
 					break;
 				}
 				else
@@ -291,19 +303,19 @@ string Calc2::solveRPN(queue<string> outQueue)
 							if (radians)
 								nums.top() = sin(nums.top());
 							else
-								nums.top() = sin(nums.top() * PI / 180);
+								nums.top() = sin(nums.top() * C_PI / 180);
 							break;
 						case 'c':
 							if (radians)
 								nums.top() = cos(nums.top());
 							else
-								nums.top() = cos(nums.top() * PI / 180);
+								nums.top() = cos(nums.top() * C_PI / 180);
 							break;
 						case 't':
 							if (radians)
 								nums.top() = tan(nums.top());
 							else
-								nums.top() = tan(nums.top() * PI / 180);
+								nums.top() = tan(nums.top() * C_PI / 180);
 							break;
 					}
 					outQueue.pop();
@@ -449,7 +461,7 @@ void Calc2::F01pythagorean(double x, double y, char missing)
 		std::cout <<"Solution: " <<  sqrt(solution) << std::endl;
 }
 //F02 Distance Formula - Public
-void Calc2::F02distance()
+void Calc2::F02distance2D()
 {
 	double x1, x2, y1, y2;
 	printf("%s\n", "\n[---> Distance Formula");
@@ -468,15 +480,49 @@ void Calc2::F02distance()
 	std::cout << "y2: ";
 	std::cin >> y2;
 	std::cin.ignore(std::numeric_limits<std::streamsize>::max(), '\n');
-	F02distance(x1, y1, x2, y2);
+	F02distance2D(x1, y1, x2, y2);
 }
 //F02 Distance Formula - Private
-void Calc2::F02distance(double x1, double y1, double x2, double y2)
+void Calc2::F02distance2D(double x1, double y1, double x2, double y2)
 {
 	std::cout << "Solution: " << sqrt(pow(x2-x1,2) + pow(y2-y1,2)) << std::endl;
 }
-//F03 Slope Formula - Public
-void Calc2::F03slope()
+
+//F03 Distance Formula - Public
+void Calc2::F03distance3D()
+{
+	double x1, x2, y1, y2, z1, z2;
+	printf("%s\n", "\n[---> Distance Formula");
+	printf("%s\n", "[---> given: two points (x1, y1, z1) and (x2, y2, z2)");
+	printf("%s\n", "[---> solve: The distance between the two points: sqrt((x2 - x1)^2 + (y2 - y1)^2 + (z2 - z1)^2)");
+	printf("%s\n", "[---> Please Enter:");
+	std::cout << "x1: ";
+	std::cin >> x1;
+	std::cin.ignore(std::numeric_limits<std::streamsize>::max(), '\n');
+	std::cout << "y1: ";
+	std::cin >> y1;
+	std::cin.ignore(std::numeric_limits<std::streamsize>::max(), '\n');
+	std::cout << "z1: ";
+	std::cin >> z1;
+	std::cin.ignore(std::numeric_limits<std::streamsize>::max(), '\n');
+	std::cout << "x2: ";
+	std::cin >> x2;
+	std::cin.ignore(std::numeric_limits<std::streamsize>::max(), '\n');
+	std::cout << "y2: ";
+	std::cin >> y2;
+	std::cin.ignore(std::numeric_limits<std::streamsize>::max(), '\n');
+	std::cout << "z2: ";
+	std::cin >> z2;
+	std::cin.ignore(std::numeric_limits<std::streamsize>::max(), '\n');
+	F03distance3D(x1, y1, z1, x2, y2, z2);
+}
+//F03 Distance Formula - Private
+void Calc2::F03distance3D(double x1, double y1, double z1, double x2, double y2, double z2)
+{
+	std::cout << "Solution: " << sqrt(pow(x2 - x1, 2) + pow(y2 - y1, 2) + pow(z2 - z1, 2)) << std::endl;
+}
+//F04 Slope Formula - Public
+void Calc2::F04slope()
 {
 	double x1, x2, y1, y2;
 	printf("%s\n", "\n[---> Slope Formula");
@@ -495,10 +541,10 @@ void Calc2::F03slope()
 	std::cout << "y2: ";
 	std::cin >> y2;
 	std::cin.ignore(std::numeric_limits<std::streamsize>::max(), '\n');
-	F03slope(x1, y1, x2, y2);
+	F04slope(x1, y1, x2, y2);
 }
-//F03 Slope Formula - Private
-void Calc2::F03slope(double x1, double y1, double x2, double y2)
+//F04 Slope Formula - Private
+void Calc2::F04slope(double x1, double y1, double x2, double y2)
 {
 	std::cout << "Solution: " << (y2-y1) << "/" << (x2-x1) << std::endl;
 }
