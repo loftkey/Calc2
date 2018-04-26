@@ -1,6 +1,5 @@
 ﻿#include "Calc2.h"
 
-
 // constructor
 Calc2::Calc2()
 {
@@ -21,15 +20,15 @@ void Calc2::CalcMenu()
 	int tempi;
 	printf("%s", menu.c_str());
 	printf("%s", temp.c_str());
-	printf("%s", "\n[Calc]: ");
 	while (!Exit)
 	{
+		printf("%s", "\n[Calc]: ");
 		std::getline(std::cin, parse);
-		if (parse == "P" || parse == "p")
+		if (parse == "PTABLE" || parse == "ptable")
 		{
 			printf("%s", prefixes.c_str());
 		}
-		else if (parse == "const" || parse == "Const" || parse == "CONST")
+		else if (parse == "clist" || parse == "Clist" || parse == "CLIST")
 		{
 			printf("%s", constants.c_str());
 		}
@@ -39,14 +38,14 @@ void Calc2::CalcMenu()
 			temp = radians ? "\nUsing: Radians\n" : "\nUsing: Degrees\n";
 			printf("%s", temp.c_str());
 		}
-		else if (parse == "E" || parse == "e")
+		else if (parse == "Q" || parse == "q")
 		{
 			system("CLS"); // replace with util clearScreen
 			Exit = true;
 		}
 		else if (toupper(parse[0]) == 'F')
 		{
-			if (parse.size() > 2)
+			if (parse.size() > 2 && parse.size() < 4)
 			{
 				if (isdigit(parse[1]) && isdigit(parse[2]))
 				{
@@ -68,6 +67,10 @@ void Calc2::CalcMenu()
 					case 04:
 						F04slope();
 						break;
+					case 05:
+						F05prime();
+					case 06:
+						F06Temperature();
 					default:
 						tempi = -1;
 					}
@@ -75,16 +78,18 @@ void Calc2::CalcMenu()
 				else
 					printf("%s\n", "Error: 000 INVALID INPUT");
 			}
-			else
+			else if(parse == "flist" || parse == "FLIST")
 				printf("%s", formulaList.c_str());
+			else
+				printf("%s\n", "Error: 000 INVALID INPUT");
 		}
-		else if (parse == "L" || parse == "l")
+		else if (parse == "CLS" || parse == "cls")
 		{
 			system("CLS"); // replace with util clearScreen
 			printf("%s", menu.c_str());
 			printf("%s", temp.c_str());
 		}
-		else if (parse == "I" || parse == "i")
+		else if (parse == "HELP" || parse == "help")
 		{
 			printf("%s", info.c_str());
 		}
@@ -95,7 +100,9 @@ void Calc2::CalcMenu()
 		}
 		parse.clear();
 		
-		printf("%s", "\n[Calc]: ");
+
+		//printf("%s", "\n[Calc]: ");
+		//std::cin.ignore(std::numeric_limits<std::streamsize>::max(), '\n');
 	}
 	system("color A");
 }
@@ -107,7 +114,7 @@ bool Calc2::valid(char c)
 // this determines order of operations precedence
 bool Calc2::isPrecedence(char a, char b)
 {
-	if ((a == '*' || a == '/') > (b == '*' || b == '/' || b == 's' || b == 'c' || b == 't' || b == '^' || b == '(' || b == ')'))
+	if ((a == '*' || a == '/' || a == '%') > (b == '*' || b == '/' || a == '%' || b == 's' || b == 'c' || b == 't' || b == '^' || b == '(' || b == ')'))
 	{
 		return true;
 	}
@@ -134,6 +141,8 @@ string Calc2::isFunc(string s)
 		return "/";
 	if (s[0] == '^')
 		return "^";
+	if (s[0] == '%')
+		return "%";
 	if (s.length() > 2)
 	{
 		if (tolower(s[0]) == 's' && tolower(s[1]) == 'i' && tolower(s[2]) == 'n')
@@ -338,6 +347,9 @@ string Calc2::solveRPN(queue<string> outQueue)
 					case '/':
 						nums.top() = nums.top() / dub;
 						break;
+					case '%':
+						nums.top() = fmod(nums.top(), dub);
+						break;
 					case '^':
 						nums.top() = pow( nums.top() , dub);
 						break;
@@ -376,13 +388,25 @@ void Calc2::F00quadratic()
 	printf("%s\n", "[---> Please Enter ");
 	printf("%s", "value of a: ");
 	std::getline(std::cin,temp);
-	a = stod(temp);
+	if (!(std::istringstream(temp) >> a))
+	{
+		printf("Error: 000 INVALID INPUT: %s %s", temp.c_str(), " is not a valid number.\n");
+		return;
+	}
 	printf("%s", "value of b: ");
 	std::getline(std::cin, temp);
-	b = stod(temp);
+	if (!(std::istringstream(temp) >> b))
+	{
+		printf("Error: 000 INVALID INPUT: %s %s", temp.c_str(), " is not a valid number.\n");
+		return;
+	}
 	printf("%s", "value of c: ");
 	std::getline(std::cin, temp);
-	c = stod(temp);
+	if (!(std::istringstream(temp) >> c))
+	{
+		printf("Error: 000 INVALID INPUT: %s %s", temp.c_str(), " is not a valid number.\n");
+		return;
+	}
 	F00quadratic(a, b, c);
 }
 //F00 Quadratic Formula - Private
@@ -406,32 +430,58 @@ void Calc2::F01pythagorean()
 	printf("%s\n", "[---> given: two of three values: a, b, c where c is the hypotenuse of a right triangle");
 	printf("%s\n", "[---> solve: a^2 + b^2 = c^2");
 	printf("%s", "[---> Please Enter the missing variable letter 'a', 'b', or 'c': ");
-	std::cin >> missing;
+	
+	std::getline(std::cin, temp);
+	missing = temp[0];
 	switch (tolower(missing))
 	{
 		case 'a' :
 			printf("%s", "Enter b: ");
-			std::cin >> x;
-			std::cin.ignore(std::numeric_limits<std::streamsize>::max(), '\n');
+			std::getline(std::cin, temp);
+			if (!(std::istringstream(temp) >> x))
+			{
+				printf("Error: 000 INVALID INPUT: %s %s", temp.c_str(), " is not a valid number.\n");
+				return;
+			}
 			printf("%s", "Enter c: ");
-			std::cin >> y;
-			std::cin.ignore(std::numeric_limits<std::streamsize>::max(), '\n');
+			std::getline(std::cin, temp);
+			if (!(std::istringstream(temp) >> y))
+			{
+				printf("Error: 000 INVALID INPUT: %s %s", temp.c_str(), " is not a valid number.\n");
+				return;
+			}
 			break;
 		case 'b' :
 			printf("%s", "Enter a: ");
-			std::cin >> x;
-			std::cin.ignore(std::numeric_limits<std::streamsize>::max(), '\n');
+			std::getline(std::cin, temp);
+			if (!(std::istringstream(temp) >> x))
+			{
+				printf("Error: 000 INVALID INPUT: %s %s", temp.c_str(), " is not a valid number.\n");
+				return;
+			}
 			printf("%s", "Enter c: ");
-			std::cin >> y;
-			std::cin.ignore(std::numeric_limits<std::streamsize>::max(), '\n');
+			std::getline(std::cin, temp);
+			if (!(std::istringstream(temp) >> y))
+			{
+				printf("Error: 000 INVALID INPUT: %s %s", temp.c_str(), " is not a valid number.\n");
+				return;
+			}
 			break;
 		case 'c' :
 			printf("%s", "Enter a: ");
-			std::cin >> x;
-			std::cin.ignore(std::numeric_limits<std::streamsize>::max(), '\n');
+			std::getline(std::cin, temp);
+			if (!(std::istringstream(temp) >> x))
+			{
+				printf("Error: 000 INVALID INPUT: %s %s", temp.c_str(), " is not a valid number.\n");
+				return;
+			}
 			printf("%s", "Enter b: ");
-			std::cin >> y;
-			std::cin.ignore(std::numeric_limits<std::streamsize>::max(), '\n');
+			std::getline(std::cin, temp);
+			if (!(std::istringstream(temp) >> y))
+			{
+				printf("Error: 000 INVALID INPUT: %s %s", temp.c_str(), " is not a valid number.\n");
+				return;
+			}
 			break;
 		default:
 			missing = 'E';
@@ -463,23 +513,40 @@ void Calc2::F01pythagorean(double x, double y, char missing)
 //F02 Distance Formula - Public
 void Calc2::F02distance2D()
 {
+	string temp;
 	double x1, x2, y1, y2;
 	printf("%s\n", "\n[---> Distance Formula");
 	printf("%s\n", "[---> given: two points (x1, y1) and (x2, y2)");
 	printf("%s\n", "[---> solve: The distance between the two points: sqrt((x2 - x1)^2 + (y2 - y1)^2)");
 	printf("%s\n", "[---> Please Enter:");
 	std::cout << "x1: ";
-	std::cin >> x1;
-	std::cin.ignore(std::numeric_limits<std::streamsize>::max(), '\n');
+	std::getline(std::cin, temp);
+	if (!(std::istringstream(temp) >> x1))
+	{
+		printf("Error: 000 INVALID INPUT: %s %s", temp.c_str(), " is not a valid number.\n");
+		return;
+	}
 	std::cout << "y1: ";
-	std::cin >> y1;
-	std::cin.ignore(std::numeric_limits<std::streamsize>::max(), '\n');
+	std::getline(std::cin, temp);
+	if (!(std::istringstream(temp) >> y1))
+	{
+		printf("Error: 000 INVALID INPUT: %s %s", temp.c_str(), " is not a valid number.\n");
+		return;
+	}
 	std::cout << "x2: ";
-	std::cin >> x2;
-	std::cin.ignore(std::numeric_limits<std::streamsize>::max(), '\n');
+	std::getline(std::cin, temp);
+	if (!(std::istringstream(temp) >> x2))
+	{
+		printf("Error: 000 INVALID INPUT: %s %s", temp.c_str(), " is not a valid number.\n");
+		return;
+	}
 	std::cout << "y2: ";
-	std::cin >> y2;
-	std::cin.ignore(std::numeric_limits<std::streamsize>::max(), '\n');
+	std::getline(std::cin, temp);
+	if (!(std::istringstream(temp) >> y2))
+	{
+		printf("Error: 000 INVALID INPUT: %s %s", temp.c_str(), " is not a valid number.\n");
+		return;
+	}
 	F02distance2D(x1, y1, x2, y2);
 }
 //F02 Distance Formula - Private
@@ -487,33 +554,57 @@ void Calc2::F02distance2D(double x1, double y1, double x2, double y2)
 {
 	std::cout << "Solution: " << sqrt(pow(x2-x1,2) + pow(y2-y1,2)) << std::endl;
 }
-
 //F03 Distance Formula - Public
 void Calc2::F03distance3D()
 {
+	string temp;
 	double x1, x2, y1, y2, z1, z2;
 	printf("%s\n", "\n[---> Distance Formula");
 	printf("%s\n", "[---> given: two points (x1, y1, z1) and (x2, y2, z2)");
 	printf("%s\n", "[---> solve: The distance between the two points: sqrt((x2 - x1)^2 + (y2 - y1)^2 + (z2 - z1)^2)");
 	printf("%s\n", "[---> Please Enter:");
 	std::cout << "x1: ";
-	std::cin >> x1;
-	std::cin.ignore(std::numeric_limits<std::streamsize>::max(), '\n');
+	std::getline(std::cin, temp);
+	if (!(std::istringstream(temp) >> x1))
+	{
+		printf("Error: 000 INVALID INPUT: %s %s", temp.c_str(), " is not a valid number.\n");
+		return;
+	}
 	std::cout << "y1: ";
-	std::cin >> y1;
-	std::cin.ignore(std::numeric_limits<std::streamsize>::max(), '\n');
+	std::getline(std::cin, temp);
+	if (!(std::istringstream(temp) >> y1))
+	{
+		printf("Error: 000 INVALID INPUT: %s %s", temp.c_str(), " is not a valid number.\n");
+		return;
+	}
 	std::cout << "z1: ";
-	std::cin >> z1;
-	std::cin.ignore(std::numeric_limits<std::streamsize>::max(), '\n');
+	std::getline(std::cin, temp);
+	if (!(std::istringstream(temp) >> z1))
+	{
+		printf("Error: 000 INVALID INPUT: %s %s", temp.c_str(), " is not a valid number.\n");
+		return;
+	}
 	std::cout << "x2: ";
-	std::cin >> x2;
-	std::cin.ignore(std::numeric_limits<std::streamsize>::max(), '\n');
+	std::getline(std::cin, temp);
+	if (!(std::istringstream(temp) >> x2))
+	{
+		printf("Error: 000 INVALID INPUT: %s %s", temp.c_str(), " is not a valid number.\n");
+		return;
+	}
 	std::cout << "y2: ";
-	std::cin >> y2;
-	std::cin.ignore(std::numeric_limits<std::streamsize>::max(), '\n');
+	std::getline(std::cin, temp);
+	if (!(std::istringstream(temp) >> y2))
+	{
+		printf("Error: 000 INVALID INPUT: %s %s", temp.c_str(), " is not a valid number.\n");
+		return;
+	}
 	std::cout << "z2: ";
-	std::cin >> z2;
-	std::cin.ignore(std::numeric_limits<std::streamsize>::max(), '\n');
+	std::getline(std::cin, temp);
+	if (!(std::istringstream(temp) >> z2))
+	{
+		printf("Error: 000 INVALID INPUT: %s %s", temp.c_str(), " is not a valid number.\n");
+		return;
+	}
 	F03distance3D(x1, y1, z1, x2, y2, z2);
 }
 //F03 Distance Formula - Private
@@ -524,27 +615,118 @@ void Calc2::F03distance3D(double x1, double y1, double z1, double x2, double y2,
 //F04 Slope Formula - Public
 void Calc2::F04slope()
 {
+	string temp;
 	double x1, x2, y1, y2;
 	printf("%s\n", "\n[---> Slope Formula");
 	printf("%s\n", "[---> given: two points (x1, y1) and (x2, y2)");
 	printf("%s\n", "[---> solve: The slope = Rise/Run (y2 - y1)/(x2 - x1)");
 	printf("%s\n", "[---> Please Enter:");
 	std::cout << "x1: ";
-	std::cin >> x1;
-	std::cin.ignore(std::numeric_limits<std::streamsize>::max(), '\n');
+	std::getline(std::cin, temp);
+	if (!(std::istringstream(temp) >> x1))
+	{
+		printf("Error: 000 INVALID INPUT: %s %s", temp.c_str(), " is not a valid number.\n");
+		return;
+	}
 	std::cout << "y1: ";
-	std::cin >> y1;
-	std::cin.ignore(std::numeric_limits<std::streamsize>::max(), '\n');
+	std::getline(std::cin, temp);
+	if (!(std::istringstream(temp) >> y1))
+	{
+		printf("Error: 000 INVALID INPUT: %s %s", temp.c_str(), " is not a valid number.\n");
+		return;
+	}
 	std::cout << "x2: ";
-	std::cin >> x2;
-	std::cin.ignore(std::numeric_limits<std::streamsize>::max(), '\n');
+	std::getline(std::cin, temp);
+	if (!(std::istringstream(temp) >> x2))
+	{
+		printf("Error: 000 INVALID INPUT: %s %s", temp.c_str(), " is not a valid number.\n");
+		return;
+	}
 	std::cout << "y2: ";
-	std::cin >> y2;
-	std::cin.ignore(std::numeric_limits<std::streamsize>::max(), '\n');
+	std::getline(std::cin, temp);
+	if (!(std::istringstream(temp) >> y2))
+	{
+		printf("Error: 000 INVALID INPUT: %s %s", temp.c_str(), " is not a valid number.\n");
+		return;
+	}
 	F04slope(x1, y1, x2, y2);
 }
 //F04 Slope Formula - Private
 void Calc2::F04slope(double x1, double y1, double x2, double y2)
 {
 	std::cout << "Solution: " << (y2-y1) << "/" << (x2-x1) << std::endl;
+}
+//F05 is Prime Number - Public
+void Calc2::F05prime()
+{
+	string temp;
+	int p;
+	std::cout << "\n[---> Please enter a number to check if it is prime: ";
+	std::getline(std::cin, temp);
+	if (!(std::istringstream(temp) >> p))
+	{
+		printf("Error: 000 INVALID INPUT: %s %s", temp.c_str(), " is not a valid number.\n");
+		return;
+	}
+	std::cout << "Solution: "<< p << " is ";
+	if (!isPrime(p))
+		std::cout << "not ";
+	std::cout << "prime. \n";
+}
+//F05 is Prime Number - Private
+bool Calc2::isPrime(int p)
+{
+	for (int i = 2; i < p; i++)
+		if (p % i == 0)
+			return false;
+	return true;
+}
+//F06 is Temp converter - Public
+void Calc2::F06Temperature()
+{
+	string temp;
+	char c;
+	double t;
+	printf("%s", "\n[---> Temperature Converter\n");
+	printf("%s", "[---> given: one of the three scales of temperature : Celcius(c), Fahrenheit(f), or Kelvin(k)\n");
+	printf("%s", "[---> solve: f = (c * 9.0) / 5.0 + 32, c = (5.0 / 9.0)*(f - 32), k = c + 273.15\n");
+	printf("%s", "[---> Please Enter the known variable letter 'c', 'f', or 'k': ");
+	std::getline(std::cin, temp);
+	if (!(std::istringstream(temp) >> c))
+	{
+		printf("Error: 000 INVALID INPUT: %s %s", temp.c_str(), " is not a valid character.\n");
+		return;
+	}
+	printf("%s", "[---> Please Enter the temperature value: ");
+	std::getline(std::cin, temp);
+	if (!(std::istringstream(temp) >> t))
+	{
+		printf("Error: 000 INVALID INPUT: %s %s", temp.c_str(), " is not a valid number.\n");
+		return;
+	}
+	F06Temperature(t, c);
+}
+//F06 is Temp converter - Private
+void Calc2::F06Temperature(double t, char known)
+{
+	double f, c, k;
+	if (tolower(known) == 'c')
+	{
+		c = t;
+		k = c + 273.15;
+		f = (c * 9.0) / 5.0 + 32;
+	}
+	else if(tolower(known) == 'f')
+	{
+		f = t;
+		c = (5.0 / 9.0)*(f - 32);
+		k = c + 273.15;
+	}
+	else if (tolower(known) == 'k')
+	{
+		k = t;
+		c = k - 273.15;
+		f = (c * 9.0) / 5.0 + 32;
+	}
+	std::cout << "Solution:\nCelcius(c): " << c << "\nFahrenheit(f): " << f << "\nKelvin(k): " << k << std::endl;
 }
