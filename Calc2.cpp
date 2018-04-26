@@ -109,7 +109,7 @@ void Calc2::CalcMenu()
 // this function checks if input is valid but not a function/operator
 bool Calc2::valid(char c)
 {
-	return (isdigit(c) || c == '(' || c == ')' || c == ' ' || c == '.');
+	return (isdigit(c) || c == '(' || c == ')' || c == ' ' || c == '.' || c == '!');
 }
 // this determines order of operations precedence
 bool Calc2::isPrecedence(char a, char b)
@@ -185,6 +185,11 @@ void Calc2::solve(string input)
 				{
 					outQueue.push(temp); // push num on Queue
 					temp.clear();
+				}
+				if (input[0] == '!')
+				{
+					opStack.push("!");
+					input.erase(input.begin()); // eat
 				}
 				while (input[0] == ' ')
 				{
@@ -327,6 +332,11 @@ string Calc2::solveRPN(queue<string> outQueue)
 								nums.top() = tan(nums.top() * C_PI / 180);
 							break;
 					}
+					outQueue.pop();
+				}
+				else if (temp[0] == '!')
+				{
+					nums.top() = factorial(nums.top());
 					outQueue.pop();
 				}
 				else if (nums.size() > 1)
@@ -729,4 +739,13 @@ void Calc2::F06Temperature(double t, char known)
 		f = (c * 9.0) / 5.0 + 32;
 	}
 	std::cout << "Solution:\nCelcius(c): " << c << "\nFahrenheit(f): " << f << "\nKelvin(k): " << k << std::endl;
+}
+long Calc2::factorial(int f)
+{
+	unsigned long factorial = 1;
+	for (int i = 1; i <= f; ++i)
+	{
+		factorial *= i;
+	}
+	return factorial;
 }

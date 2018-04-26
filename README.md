@@ -119,6 +119,7 @@ DESCRIPTION: Calc2 is a calculator with functions for equations
 					-Added Error handling for incorrect numerical inputs
 					-Added modulus operator
 					-Added Temperature converter as formula 6 (F06)
+                    -Added factorial
 					CHANGES:
 					-Changed keyword: E (exit) to Q for quit
 					-Changed keyword: L (clear) to cls for clearing screen

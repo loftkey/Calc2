@@ -120,6 +120,7 @@ DESCRIPTION: Calc2 is a calculator with functions for equations
 					-Added Error handling for incorrect numerical inputs
 					-Added modulus operator
 					-Added Temperature converter as formula 6 (F06)
+					-Added factorial
 					CHANGES:
 					-Changed keyword: E (exit) to Q for quit
 					-Changed keyword: L (clear) to cls for clearing screen
@@ -165,7 +166,7 @@ private:
 	bool			isPrime(int p);
 	string			isFunc(string);
 	string			solveRPN(queue<string> outQueue);
-
+	long			factorial(int f);
 //----------------------- Formulas ----------------------------------------
 	void			F00quadratic(double a, double b, double c);
 	void			F01pythagorean(double x, double y, char missing);
@@ -173,10 +174,11 @@ private:
 	void			F03distance3D(double x1, double y1, double z1, double x2, double y2, double z);
 	void			F04slope(double x1, double y1, double x2, double y2);
 	void			F06Temperature(double t, char known);
+
 //-------------------------------------------------------------------------
 
 public:
-	const double	C_PI = 3.1415926535897932384626433832795;
+	const long long	C_PI = 3.1415926535897932384626433832795;
 
 	Calc2();
 	Calc2(bool);
