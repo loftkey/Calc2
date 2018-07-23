@@ -1,15 +1,13 @@
 
 
-# Calc2 is a postfix calculator with functions for math equations
+## Calc2 is a postfix calculator with functions for math equations
 ##### START DATE: 09/11/2016
 
 ## To use:
 1. Download
 2. Compile with c++ compiler and run
 
-
-
-	CHANGE LOG:
+## CHANGE LOG:
 
 		[*]	09/11/2016 | 0.1.0:
 				ADDITIONS:
